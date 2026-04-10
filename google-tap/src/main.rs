@@ -15,8 +15,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     let api_token = std::env::var("GOOGLE_API_TOKEN").unwrap();
     let hub = std::env::var("TAPHUB_ENDPOINT").unwrap_or_else(|_| "api.zako.ac".to_string());
     let server_name = std::env::var("TAPHUB_SERVER_NAME").ok();
-    let healthcheck_port = std::env::var("TAPHUB_HEALTHCHECK_PORT").ok()
-        .map(|v| v.parse::<u16>().expect("TAPHUB_HEALTHCHECK_PORT must be a valid port number"));
+    let healthcheck_port = std::env::var("TAP_HEALTHCHECK_PORT").ok()
+        .map(|v| v.parse::<u16>().expect("TAP_HEALTHCHECK_PORT must be a valid port number"));
 
     let mut builder = tap()
         .hub(&hub)
