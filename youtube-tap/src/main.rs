@@ -13,16 +13,22 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
 
     let tap_id = std::env::var("YOUTUBE_TAP_ID").unwrap();
     let api_token = std::env::var("YOUTUBE_API_TOKEN").unwrap();
+    let hub = std::env::var("TAPHUB_ENDPOINT").unwrap_or_else(|_| "api.zako.ac".to_string());
+    let server_name = std::env::var("TAPHUB_SERVER_NAME").ok();
 
-    tap()
+    let mut builder = tap()
         //.cert_pem("cert.pem")
-        .hub("api.zako.ac")
+        .hub(&hub)
         .tap_id(&tap_id)
         .friendly_name("YouTube Tap")
         .api_token(&api_token)
-        .selection_weight(1.0)
-        .run(Arc::new(ytdl::YtdlTapHandler::new().await?))
-        .await?;
+        .selection_weight(1.0);
+
+    if let Some(ref sn) = server_name {
+        builder = builder.server_name(sn);
+    }
+
+    builder.run(Arc::new(ytdl::YtdlTapHandler::new().await?)).await?;
 
     Ok(())
 }

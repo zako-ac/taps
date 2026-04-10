@@ -1760,7 +1760,9 @@ dependencies = [
 
 [[package]]
 name = "protofish2"
-version = "0.6.2"
+version = "0.6.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4e223b6540ebe38f4d06fb303475baa5ac7a32841a6c93dc9faaf3c1e02340a0"
 dependencies = [
  "bytes",
  "dashmap",
@@ -3686,6 +3688,8 @@ dependencies = [
 [[package]]
 name = "zako3-tap-sdk"
 version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d496ddbeaf2757403d41099cdd3e268f2b71fd7b32bfc58aa4906879a648ae22"
 dependencies = [
  "async-trait",
  "bytes",
@@ -3704,6 +3708,8 @@ dependencies = [
 [[package]]
 name = "zakofish"
 version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c0cf896900df4404ae1b147bdda67a9b83ffc266bf766c62b8d9562a8daddf58"
 dependencies = [
  "async-trait",
  "bytes",

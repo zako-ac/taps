@@ -14,16 +14,22 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     let tap_id = std::env::var("PAPAGO_TAP_ID").expect("PAPAGO_TAP_ID env var is required");
     let api_token =
         std::env::var("PAPAGO_API_TOKEN").expect("PAPAGO_API_TOKEN env var is required");
+    let hub = std::env::var("TAPHUB_ENDPOINT").unwrap_or_else(|_| "api.zako.ac".to_string());
+    let server_name = std::env::var("TAPHUB_SERVER_NAME").ok();
 
-    tap()
+    let mut builder = tap()
         //.cert_pem("cert.pem")
-        .hub("api.zako.ac")
+        .hub(&hub)
         .tap_id(&tap_id)
         .friendly_name("Papago TTS Tap")
         .api_token(&api_token)
-        .selection_weight(1.0)
-        .run(Arc::new(papago::PapagoTapHandler))
-        .await?;
+        .selection_weight(1.0);
+
+    if let Some(ref sn) = server_name {
+        builder = builder.server_name(sn);
+    }
+
+    builder.run(Arc::new(papago::PapagoTapHandler)).await?;
 
     Ok(())
 }

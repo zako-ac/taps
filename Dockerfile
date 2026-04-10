@@ -7,11 +7,12 @@ RUN cargo build --workspace --release
 FROM debian:bookworm-slim AS runtime
 ARG BIN
 
-RUN if [ "$BIN" = "youtube-tap" ]; then \
-      apt-get update && \
-      apt-get install -y --no-install-recommends python3 yt-dlp && \
-      rm -rf /var/lib/apt/lists/*; \
-    fi
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends libssl3 ca-certificates && \
+    if [ "$BIN" = "youtube-tap" ]; then \
+      apt-get install -y --no-install-recommends python3 yt-dlp; \
+    fi && \
+    rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /app/target/release/${BIN} /usr/local/bin/app
 ENTRYPOINT ["/usr/local/bin/app"]
