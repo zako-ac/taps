@@ -1,0 +1,14 @@
+[package]
+name = "sam-tap"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+async-trait = { workspace = true }
+dotenvy = { workspace = true }
+rustls = { workspace = true }
+sam-tts = { workspace = true }
+tokio = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+zako3-tap-sdk = { workspace = true }

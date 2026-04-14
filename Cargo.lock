@@ -1828,9 +1828,9 @@ dependencies = [
 
 [[package]]
 name = "protofish2"
-version = "0.6.3"
+version = "0.6.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4e223b6540ebe38f4d06fb303475baa5ac7a32841a6c93dc9faaf3c1e02340a0"
+checksum = "26281cc971a069e95781f33f03e50a899602171b9d4f31349082ea1225c2bbe4"
 dependencies = [
  "bytes",
  "dashmap",
@@ -2306,6 +2306,24 @@ name = "ryu"
 version = "1.0.23"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9774ba4a74de5f7b1c1451ed6cd5285a32eddb5cccb8cc655a4e50009e06477f"
+
+[[package]]
+name = "sam-tap"
+version = "0.1.0"
+dependencies = [
+ "async-trait",
+ "dotenvy",
+ "rustls",
+ "sam-tts",
+ "tokio",
+ "tracing",
+ "tracing-subscriber",
+ "zako3-tap-sdk",
+]
+
+[[package]]
+name = "sam-tts"
+version = "0.1.0"
 
 [[package]]
 name = "same-file"

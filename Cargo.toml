@@ -1,5 +1,5 @@
 [workspace]
-members = ["google-tap", "papago-tap", "youtube-tap"]
+members = ["google-tap", "papago-tap", "youtube-tap", "sam-tap"]
 resolver = "2"
 
 [workspace.dependencies]
@@ -21,3 +21,7 @@ urlencoding = "2.1"
 uuid = { version = "1.23.0", features = ["v4"] }
 yt-dlp = { version = "2.7.2", features = ["live-streaming"] }
 zako3-tap-sdk = { version = "0.1.1", features = ["auto-encode", "healthcheck"] }
+sam-tts = { path = "../sam-tts" }
+
+[patch.crates-io.protofish2]
+path = "https://github.com/mincomk/protofish2-rs"
