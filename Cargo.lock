@@ -1829,7 +1829,7 @@ dependencies = [
 [[package]]
 name = "protofish2"
 version = "0.6.7"
-source = "git+https://github.com/mincomk/protofish2-rs?branch=main#45feaf7cfa2a3f6e0bc5dd029165070a0c1c9644"
+source = "git+https://github.com/mincomk/protofish2-rs?branch=main#7abd358d772d644bec361352b025918f1c616dc6"
 dependencies = [
  "bytes",
  "dashmap",
@@ -3786,7 +3786,7 @@ dependencies = [
 [[package]]
 name = "zako3-tap-sdk"
 version = "0.1.3"
-source = "git+https://github.com/zako-ac/zako3#a16716ba3892f4192b256929fb1ff429089f4948"
+source = "git+https://github.com/zako-ac/zako3#84634103f9f0a3a97831a84e4e2bd030b32adaf2"
 dependencies = [
  "async-trait",
  "axum",
@@ -3806,7 +3806,7 @@ dependencies = [
 [[package]]
 name = "zakofish"
 version = "0.1.1"
-source = "git+https://github.com/zako-ac/zako3#a16716ba3892f4192b256929fb1ff429089f4948"
+source = "git+https://github.com/zako-ac/zako3#84634103f9f0a3a97831a84e4e2bd030b32adaf2"
 dependencies = [
  "async-trait",
  "bytes",
