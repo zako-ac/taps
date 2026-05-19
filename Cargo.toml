@@ -1,5 +1,5 @@
 [workspace]
-members = ["google-tap", "papago-tap", "youtube-tap", "sam-tap", "wedding-tap"]
+members = ["google-tap", "papago-tap", "youtube-tap", "sam-tap", "wedding-tap", "supertonic-tap"]
 resolver = "2"
 
 [workspace.dependencies]
@@ -27,9 +27,4 @@ sam-tts = { git = "https://github.com/mincomk/sam-tts" }
 [patch.crates-io.protofish2]
 #path = "/home/allen/projects/protofish2-rs"
 git = "https://github.com/mincomk/protofish2-rs"
-branch = "main"
-
-[patch.crates-io.zako3-tap-sdk]
-#path = "/home/allen/projects/zako3/libs/tap-sdk"
-git = "https://github.com/zako-ac/zako3"
 branch = "main"

@@ -8,8 +8,16 @@ FROM debian:bookworm-slim AS runtime
 ARG BIN
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends libssl3 ca-certificates ffmpeg wget && \
+    apt-get install -y --no-install-recommends libssl3 ca-certificates ffmpeg wget git git-lfs && \
     rm -rf /var/lib/apt/lists/*
+
+RUN if [ "$BIN" = "supertonic-tap" ]; then \
+      git lfs install --system && \
+      git clone --depth=1 https://huggingface.co/Supertone/supertonic-3 /opt/supertonic && \
+      git -C /opt/supertonic lfs pull; \
+    fi
+ENV SUPERTONIC_MODEL_DIR=/opt/supertonic
+ENV SUPERTONIC_VOICE_STYLE=/opt/supertonic/voice_styles/M1.json
 
 RUN if [ "$BIN" = "youtube-tap" ]; then \
       printf '#!/bin/sh\nwget -q https://github.com/yt-dlp/yt-dlp/releases/download/2026.03.17/yt-dlp_linux -O /usr/local/bin/yt-dlp && chmod +x /usr/local/bin/yt-dlp\nexec /usr/local/bin/app "$@"\n' > /entrypoint.sh; \

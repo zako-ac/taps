@@ -27,6 +27,7 @@ jobs:
             target/release/papago-tap
             target/release/youtube-tap
             target/release/wedding-tap
+            target/release/supertonic-tap
 
   publish:
     needs: build
@@ -36,7 +37,7 @@ jobs:
       packages: write
     strategy:
       matrix:
-        tap: [google-tap, papago-tap, youtube-tap, wedding-tap]
+        tap: [google-tap, papago-tap, youtube-tap, wedding-tap, supertonic-tap]
     steps:
       - uses: actions/checkout@v4
 
