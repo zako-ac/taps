@@ -56,9 +56,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     let voice_style_for_init = voice_style_path.clone();
     let pool = Arc::new(TtsPool::spawn(
         workers,
-        move || {
+        move |id| {
+            let span = tracing::info_span!("worker", worker_id = id);
+            let _enter = span.enter();
             let tts = load_text_to_speech(&onnx_dir_for_init)?;
-            let style = load_voice_style(&[voice_style_for_init.clone()], false)?;
+            let style = load_voice_style(std::slice::from_ref(&voice_style_for_init), false)?;
             Ok((tts, style))
         },
         TtsOpts {

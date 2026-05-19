@@ -28,7 +28,7 @@ pub struct TtsPool {
 impl TtsPool {
     pub fn spawn<I>(workers: usize, init: I, opts: TtsOpts) -> Result<Self>
     where
-        I: Fn() -> Result<(TextToSpeech, Style)> + Send + Sync + 'static,
+        I: Fn(u32) -> Result<(TextToSpeech, Style)> + Send + Sync + 'static,
     {
         let workers = workers.max(1);
         let (tx, rx) = bounded::<TtsJob>(workers * 4);
@@ -40,7 +40,7 @@ impl TtsPool {
             thread::Builder::new()
                 .name(format!("supertonic-tts-{worker_id}"))
                 .spawn(move || {
-                    let (mut tts, style) = match init() {
+                    let (mut tts, style) = match init(worker_id as u32) {
                         Ok(pair) => pair,
                         Err(e) => {
                             tracing::error!("worker {worker_id} init failed: {e:?}");

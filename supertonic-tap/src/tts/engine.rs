@@ -1,14 +1,14 @@
-use anyhow::{Context, Result};
+use super::text::{UnicodeProcessor, VoiceStyleData, chunk_text, length_to_mask};
+use anyhow::{Context, Result, anyhow};
 use ndarray::{Array, Array3};
-use ort::session::Session;
 use ort::value::Value;
+use ort::{ep::ExecutionProviderDispatch, session::Session};
 use rand_distr::{Distribution, Normal};
 use serde::Deserialize;
+use std::collections::HashMap;
 use std::fs::File;
 use std::io::BufReader;
 use std::path::Path;
-
-use super::text::{UnicodeProcessor, VoiceStyleData, chunk_text, length_to_mask};
 
 #[derive(Debug, Clone, Deserialize)]
 pub struct Config {
@@ -30,8 +30,8 @@ pub struct TTLConfig {
 
 pub fn load_cfgs<P: AsRef<Path>>(onnx_dir: P) -> Result<Config> {
     let cfg_path = onnx_dir.as_ref().join("tts.json");
-    let file = File::open(&cfg_path)
-        .with_context(|| format!("failed to open {}", cfg_path.display()))?;
+    let file =
+        File::open(&cfg_path).with_context(|| format!("failed to open {}", cfg_path.display()))?;
     let reader = BufReader::new(file);
     let cfgs: Config = serde_json::from_reader(reader)?;
     Ok(cfgs)
@@ -191,15 +191,24 @@ impl TextToSpeech {
         speed: f32,
         silence_duration: f32,
     ) -> Result<(Vec<f32>, f32)> {
-        let max_len = if lang == "ko" || lang == "ja" { 120 } else { 300 };
+        let max_len = if lang == "ko" || lang == "ja" {
+            120
+        } else {
+            300
+        };
         let chunks = chunk_text(text, Some(max_len));
 
         let mut wav_cat: Vec<f32> = Vec::new();
         let mut dur_cat: f32 = 0.0;
 
         for (i, chunk) in chunks.iter().enumerate() {
-            let (wav, duration) =
-                self.infer(&[chunk.clone()], &[lang.to_string()], style, total_step, speed)?;
+            let (wav, duration) = self.infer(
+                &[chunk.clone()],
+                &[lang.to_string()],
+                style,
+                total_step,
+                speed,
+            )?;
 
             let dur = duration[0];
             let wav_len = (self.sample_rate as f32 * dur) as usize;
@@ -255,7 +264,10 @@ fn sample_noisy_latent(
         }
     }
 
-    let latent_lengths: Vec<usize> = wav_lengths.iter().map(|&len| len.div_ceil(chunk_size)).collect();
+    let latent_lengths: Vec<usize> = wav_lengths
+        .iter()
+        .map(|&len| len.div_ceil(chunk_size))
+        .collect();
 
     let latent_mask = length_to_mask(&latent_lengths, Some(latent_len));
 
@@ -332,6 +344,71 @@ pub fn load_voice_style(voice_style_paths: &[String], verbose: bool) -> Result<S
     })
 }
 
+#[cfg(feature = "webgpu")]
+fn load_backend_webgpu(config: &HashMap<String, String>) -> Result<ExecutionProviderDispatch> {
+    let webgpu_device_id = config
+        .get("WEBGPU_DEVICE_ID")
+        .cloned()
+        .unwrap_or_else(|| "0".to_string())
+        .parse::<i32>()
+        .inspect_err(|e| tracing::error!("{e}"))?;
+
+    let webgpu = ort::ep::WebGPU::default().with_device_id(webgpu_device_id);
+
+    Ok(webgpu.build())
+}
+
+#[cfg(feature = "cuda")]
+fn load_backend_cuda(config: &HashMap<String, String>) -> Result<ExecutionProviderDispatch> {
+    let cuda_device_id = config
+        .get("CUDA_DEVICE_ID")
+        .cloned()
+        .unwrap_or_else(|| "0".to_string())
+        .parse::<i32>()
+        .inspect_err(|e| tracing::error!("{e}"))?;
+
+    let cuda = ort::ep::CUDA::default().with_device_id(cuda_device_id);
+
+    Ok(cuda.build())
+}
+
+fn load_backends(config: &HashMap<String, String>) -> Vec<ExecutionProviderDispatch> {
+    let enabled_backends = config
+        .get("ENABLED_BACKENDS")
+        .cloned()
+        .unwrap_or_else(|| "all".to_string())
+        .split(",")
+        .map(Into::into)
+        .collect::<Vec<String>>();
+
+    enabled_backends.iter().filter_map(|name| {
+        #[cfg(feature = "cuda")]
+        if name == "cuda" {
+            return load_backend_cuda(config)
+                .inspect_err(|err| {
+                    tracing::error!("Failed to load backend *{}*: {:?}", name, err);
+                })
+                .ok();
+        }
+
+        #[cfg(feature = "webgpu")]
+        if name == "webgpu" {
+            return load_backend_webgpu(config)
+                .inspect_err(|err| {
+                    tracing::error!("Failed to load backend *{}*: {:?}", name, err);
+                })
+                .ok();
+        }
+
+        tracing::error!(
+            "ENABLED_BACKENDS contains {}, but the binary is not compiled with {} backend support.",
+            name,
+            name
+        );
+        None
+    }).collect()
+}
+
 pub fn load_text_to_speech(onnx_dir: &str) -> Result<TextToSpeech> {
     let cfgs = load_cfgs(onnx_dir)?;
 
@@ -340,10 +417,26 @@ pub fn load_text_to_speech(onnx_dir: &str) -> Result<TextToSpeech> {
     let vector_est_path = format!("{}/vector_estimator.onnx", onnx_dir);
     let vocoder_path = format!("{}/vocoder.onnx", onnx_dir);
 
-    let dp_ort = Session::builder()?.commit_from_file(&dp_path)?;
-    let text_enc_ort = Session::builder()?.commit_from_file(&text_enc_path)?;
-    let vector_est_ort = Session::builder()?.commit_from_file(&vector_est_path)?;
-    let vocoder_ort = Session::builder()?.commit_from_file(&vocoder_path)?;
+    tracing::info!("Session successfully loaded with Vulkan GPU acceleration!");
+
+    let providers = load_backends(&std::env::vars().collect());
+
+    let dp_ort = Session::builder()?
+        .with_execution_providers(&providers)
+        .map_err(|e| anyhow!(e.message().to_string()))?
+        .commit_from_file(&dp_path)?;
+    let text_enc_ort = Session::builder()?
+        .with_execution_providers(&providers)
+        .map_err(|e| anyhow!(e.message().to_string()))?
+        .commit_from_file(&text_enc_path)?;
+    let vector_est_ort = Session::builder()?
+        .with_execution_providers(&providers)
+        .map_err(|e| anyhow!(e.message().to_string()))?
+        .commit_from_file(&vector_est_path)?;
+    let vocoder_ort = Session::builder()?
+        .with_execution_providers(&providers)
+        .map_err(|e| anyhow!(e.message().to_string()))?
+        .commit_from_file(&vocoder_path)?;
 
     let unicode_indexer_path = format!("{}/unicode_indexer.json", onnx_dir);
     let text_processor = UnicodeProcessor::new(&unicode_indexer_path)?;

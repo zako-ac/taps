@@ -3,6 +3,11 @@ name = "supertonic-tap"
 version = "0.1.0"
 edition = "2024"
 
+[features]
+default = []
+webgpu = [ "ort/webgpu" ]
+cuda = [ "ort/cuda" ]
+
 [dependencies]
 anyhow = "1.0.102"
 async-trait = { workspace = true }
