@@ -1,5 +1,5 @@
 use std::sync::Arc;
-use zako3_tap_sdk::tap;
+use zako3_tap_sdk::{Transport, tap};
 
 pub mod ytdl;
 
@@ -26,6 +26,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         .tap_id(&tap_id)
         .friendly_name("YouTube Tap")
         .api_token(&api_token)
+        .transport(Transport::Protofish3)
         .selection_weight(1.0);
 
     if let Some(ref sn) = server_name {
