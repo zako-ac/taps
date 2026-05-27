@@ -1,7 +1,7 @@
 use std::{io::Cursor, sync::Arc};
 use zako3_tap_sdk::{
     AttachedMetadata, AudioCachePolicy, AudioCacheType, AudioMetadata, AudioMetadataSuccessMessage,
-    AudioRequestSuccessMessage, AudioSource, AudioStreamSender, TapError, TapHandler,
+    AudioRequestSuccessMessage, AudioSource, AudioStreamSender, TapError, TapHandler, Transport,
     encode::decode_and_stream, tap,
 };
 
@@ -28,6 +28,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         .tap_id(&tap_id)
         .friendly_name("Wedding TTS Tap")
         .api_token(&api_token)
+        .transport(Transport::Protofish3)
         .selection_weight(1.0);
 
     if let Some(ref sn) = server_name {
