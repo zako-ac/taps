@@ -1,7 +1,7 @@
 # Zako3 Taps
 > ⚡️ Official Taps for Zako3
 
-This repository includes offical taps for zako3.
+This repository includes official taps for Zako3.
 
 ## Included taps
 ### TTS
