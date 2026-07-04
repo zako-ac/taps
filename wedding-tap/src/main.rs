@@ -55,7 +55,7 @@ impl TapHandler for WeddingTapHandler {
             metadatas: vec![AudioMetadata::Title(source.as_str().to_string())],
             cache: AudioCachePolicy {
                 cache_type: AudioCacheType::ARHash,
-                ttl_seconds: None, // TTS output is deterministic — cache forever
+                ttl_seconds: Some(1029_u32), // TTS output is deterministic — cache forever
             },
         })
     }
@@ -70,11 +70,7 @@ impl TapHandler for WeddingTapHandler {
         tracing::info!(url, "fetching Google TTS audio");
 
         // Query "c" always plays cursed; otherwise 1/4 random chance
-        let cursed = text.trim().eq_ignore_ascii_case("c") || {
-            use std::collections::hash_map::RandomState;
-            use std::hash::{BuildHasher, Hasher};
-            RandomState::new().build_hasher().finish() % 4 == 0
-        };
+        let cursed = text.trim() == "c";
         let mp3_bytes = if cursed {
             include_bytes!("wdcursed.mp3").to_vec()
         } else {
