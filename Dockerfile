@@ -32,7 +32,7 @@ ENV SUPERTONIC_MODEL_DIR=/opt/supertonic
 ENV SUPERTONIC_VOICE_STYLE=/opt/supertonic/voice_styles/M1.json
 
 RUN if [ "$BIN" = "youtube-tap" ]; then \
-      printf '#!/bin/sh\nwget -q https://github.com/yt-dlp/yt-dlp/releases/download/2026.03.17/yt-dlp_linux -O /usr/local/bin/yt-dlp && chmod +x /usr/local/bin/yt-dlp\nexec /usr/local/bin/app "$@"\n' > /entrypoint.sh; \
+      printf '#!/bin/sh\nwget -q https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_linux -O /usr/local/bin/yt-dlp && chmod +x /usr/local/bin/yt-dlp\nexec /usr/local/bin/app "$@"\n' > /entrypoint.sh; \
     else \
       printf '#!/bin/sh\nexec /usr/local/bin/app "$@"\n' > /entrypoint.sh; \
     fi && chmod +x /entrypoint.sh
