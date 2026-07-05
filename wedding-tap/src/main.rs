@@ -71,9 +71,13 @@ impl TapHandler for WeddingTapHandler {
 
         // Query "c" always plays cursed; otherwise 1/4 random chance
         let cursed = text.trim() == "c";
+        let re = text.trim() == "r";
         let mp3_bytes = if cursed {
             include_bytes!("wdcursed.mp3").to_vec()
-        } else {
+        } else if re {
+            include_bytes!("wdr.ogg").to_vec()
+        }
+        else{
             include_bytes!("wd.mp3").to_vec()
         };
 
