@@ -20,7 +20,7 @@ url = "2"
 urlencoding = "2.1"
 uuid = { version = "1.23.0", features = ["v4"] }
 yt-dlp = { version = "2.7.2", features = ["live-streaming"] }
-zako3-tap-sdk = { git = "https://github.com/zako-ac/zako3", rev = "20de657485a0c933412933708f972af4e977d799", features = ["auto-encode", "healthcheck"] }
+zako3-tap-sdk = { git = "https://github.com/zako-ac/zako3", features = ["auto-encode", "healthcheck"] }
 #zako3-tap-sdk = { path = "/home/allen/projects/zako3/libs/tap-sdk", features = ["auto-encode", "healthcheck"] }
 sam-tts = { git = "https://github.com/mincomk/sam-tts" }
 
