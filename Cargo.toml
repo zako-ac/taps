@@ -21,6 +21,6 @@ urlencoding = "2.1"
 uuid = { version = "1.23.0", features = ["v4"] }
 yt-dlp = { version = "2.7.2", features = ["live-streaming"] }
 zakofish4-tap = { git = "https://github.com/zako-ac/zakofish4", features = ["auto-encode", "healthcheck"] }
-#zakofish4-tap = { path = "/home/allen/projects/zakofish4/zakofish4-tap", features = ["auto-encode", "healthcheck"] }
+zako3-tap-sdk = { git = "https://github.com/zako-ac/zako3", rev = "20de657485a0c933412933708f972af4e977d799", features = ["auto-encode", "healthcheck"] }
 sam-tts = { git = "https://github.com/mincomk/sam-tts" }
 
