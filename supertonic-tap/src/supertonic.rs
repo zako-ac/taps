@@ -1,6 +1,6 @@
 use std::io::Cursor;
 use std::sync::Arc;
-use zako3_tap_sdk::{
+use zakofish4_tap::{
     AttachedMetadata, AudioCachePolicy, AudioCacheType, AudioMetadata, AudioMetadataSuccessMessage,
     AudioRequestSuccessMessage, AudioSource, AudioStreamSender, TapError, TapHandler,
     encode::decode_and_stream,

@@ -1,10 +1,10 @@
 use base64::{Engine, engine::general_purpose::STANDARD};
 use std::io::Cursor;
-use zako3_tap_sdk::{
+use zakofish4_tap::{
     AttachedMetadata, AudioMetadataSuccessMessage, AudioRequestSuccessMessage, AudioSource,
     AudioStreamSender, TapError, TapHandler, encode::decode_and_stream,
 };
-use zako3_tap_sdk::{AudioCachePolicy, AudioCacheType, AudioMetadata};
+use zakofish4_tap::{AudioCachePolicy, AudioCacheType, AudioMetadata};
 
 const MAKEURL: &str = "https://papago.naver.com/apis/tts/makeID";
 const HMAC_KEY: &str = "v1.9.3_3bdf0438a8";

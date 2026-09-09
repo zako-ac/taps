@@ -14,4 +14,4 @@ tracing-subscriber = { workspace = true }
 url = { workspace = true }
 uuid = { workspace = true }
 yt-dlp = { workspace = true }
-zako3-tap-sdk = { workspace = true }
+zakofish4-tap = { workspace = true }

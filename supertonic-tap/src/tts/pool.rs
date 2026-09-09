@@ -4,7 +4,7 @@ use std::sync::Arc;
 use std::thread;
 use std::time::Instant;
 use tokio::sync::oneshot;
-use zako3_tap_sdk::TapError;
+use zakofish4_tap::TapError;
 
 use super::engine::{Style, TextToSpeech};
 use super::wav::wav_bytes;
