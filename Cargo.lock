@@ -2047,7 +2047,7 @@ dependencies = [
 [[package]]
 name = "protofish4"
 version = "0.1.0"
-source = "git+https://github.com/zako-ac/protofish4-rs#de55e037e02670e35520d758e7e802b361e05ccd"
+source = "git+https://github.com/zako-ac/protofish4-rs#87cbbad156b6750058dd1579a89a76a364b48325"
 dependencies = [
  "bytes",
  "protofish4-proto",
@@ -2060,7 +2060,7 @@ dependencies = [
 [[package]]
 name = "protofish4-proto"
 version = "0.1.0"
-source = "git+https://github.com/zako-ac/protofish4-rs#de55e037e02670e35520d758e7e802b361e05ccd"
+source = "git+https://github.com/zako-ac/protofish4-rs#87cbbad156b6750058dd1579a89a76a364b48325"
 dependencies = [
  "chacha20poly1305",
  "thiserror 2.0.20",
@@ -3925,7 +3925,7 @@ dependencies = [
 [[package]]
 name = "zakofish4-common"
 version = "0.1.0"
-source = "git+https://github.com/zako-ac/zakofish4#299a9443aa32d5a92ab5aea68a2ac46459126f60"
+source = "git+https://github.com/zako-ac/zakofish4#2f897b34a9cc54906cde871eef8e017a0fb5eb48"
 dependencies = [
  "rmp-serde",
  "serde",
@@ -3937,7 +3937,7 @@ dependencies = [
 [[package]]
 name = "zakofish4-tap"
 version = "0.1.0"
-source = "git+https://github.com/zako-ac/zakofish4#299a9443aa32d5a92ab5aea68a2ac46459126f60"
+source = "git+https://github.com/zako-ac/zakofish4#2f897b34a9cc54906cde871eef8e017a0fb5eb48"
 dependencies = [
  "async-trait",
  "axum",
