@@ -13,7 +13,9 @@ This repository includes official taps for Zako3.
 * [wedding](./wedding-tap/)
 * [youtube](./youtube-tap/) — resolves a request with
   [`ysrs`](https://github.com/mincomk/ysrs) (innertube search and player
-  endpoint, no API key) and fetches the audio with `yt-dlp`
+  endpoint, no API key), streams the audio from
+  [`ydrs`](https://github.com/mincomk/ydrs) straight through `ffmpeg`, and
+  falls back to `yt-dlp` when the innertube scrape cannot answer
 
 ## Protocol
 
@@ -29,4 +31,5 @@ previous long-lived QUIC connection did not.
 
 `ffmpeg` must be on `PATH`; the taps use the SDK's `auto-encode` helper to turn
 downloaded audio into 20 ms Opus frames. The YouTube tap additionally needs
-`yt-dlp` on `PATH` — it is what fetches the audio.
+`yt-dlp` on `PATH` — it is the fallback the tap resolves and downloads with when
+`ysrs` cannot reach YouTube's innertube endpoints.

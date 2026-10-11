@@ -3848,6 +3848,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "ydrs"
+version = "0.1.0"
+source = "git+https://github.com/mincomk/ydrs#40c7ec8e1cdb83251e4f167ab72cf3134a0a1e8b"
+dependencies = [
+ "regex",
+ "reqwest 0.12.28",
+ "serde",
+ "serde_json",
+ "thiserror 2.0.20",
+ "tokio",
+ "url",
+]
+
+[[package]]
 name = "yoke"
 version = "0.8.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3877,13 +3891,16 @@ dependencies = [
  "async-trait",
  "bytes",
  "dotenvy",
+ "ogg",
  "reqwest 0.12.28",
  "rustls",
  "tokio",
+ "tokio-stream",
  "tracing",
  "tracing-subscriber",
  "url",
  "uuid",
+ "ydrs",
  "ysrs",
  "yt-dlp",
  "zakofish4-tap",
