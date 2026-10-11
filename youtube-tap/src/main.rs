@@ -1,7 +1,7 @@
 use std::sync::Arc;
 use zakofish4_tap::tap;
 
-pub mod ytdl;
+pub mod youtube;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
@@ -35,7 +35,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     }
 
     builder
-        .run(Arc::new(ytdl::YtdlTapHandler::new().await?))
+        .run(Arc::new(youtube::YouTubeTapHandler::new().await?))
         .await?;
 
     Ok(())
