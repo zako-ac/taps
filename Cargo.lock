@@ -1105,6 +1105,7 @@ dependencies = [
  "tokio",
  "tokio-rustls",
  "tower-service",
+ "webpki-roots 1.0.9",
 ]
 
 [[package]]
@@ -2281,6 +2282,7 @@ dependencies = [
  "base64 0.22.1",
  "bytes",
  "encoding_rs",
+ "futures-channel",
  "futures-core",
  "futures-util",
  "h2",
@@ -2297,6 +2299,8 @@ dependencies = [
  "native-tls",
  "percent-encoding",
  "pin-project-lite",
+ "quinn",
+ "rustls",
  "rustls-pki-types",
  "serde",
  "serde_json",
@@ -2304,6 +2308,7 @@ dependencies = [
  "sync_wrapper",
  "tokio",
  "tokio-native-tls",
+ "tokio-rustls",
  "tokio-util 0.7.19",
  "tower",
  "tower-http",
@@ -2313,6 +2318,7 @@ dependencies = [
  "wasm-bindgen-futures",
  "wasm-streams 0.4.2",
  "web-sys",
+ "webpki-roots 1.0.9",
 ]
 
 [[package]]
@@ -3871,14 +3877,29 @@ dependencies = [
  "async-trait",
  "bytes",
  "dotenvy",
+ "reqwest 0.12.28",
  "rustls",
  "tokio",
  "tracing",
  "tracing-subscriber",
  "url",
  "uuid",
+ "ysrs",
  "yt-dlp",
  "zakofish4-tap",
+]
+
+[[package]]
+name = "ysrs"
+version = "0.1.0"
+source = "git+https://github.com/mincomk/ysrs#a2e25de9f1b998aeb65eb6a4373ef6b2b8cc6615"
+dependencies = [
+ "chrono",
+ "regex",
+ "reqwest 0.12.28",
+ "serde_json",
+ "thiserror 2.0.20",
+ "url",
 ]
 
 [[package]]

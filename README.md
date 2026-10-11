@@ -11,7 +11,9 @@ This repository includes official taps for Zako3.
 * [supertonic](./supertonic-tap/)
 ### Music
 * [wedding](./wedding-tap/)
-* [youtube](./youtube-tap/)
+* [youtube](./youtube-tap/) — resolves a request with
+  [`ysrs`](https://github.com/mincomk/ysrs) (innertube search and player
+  endpoint, no API key) and fetches the audio with `yt-dlp`
 
 ## Protocol
 
@@ -26,4 +28,5 @@ whole reason for the change — it survives the NATs and firewalls that the
 previous long-lived QUIC connection did not.
 
 `ffmpeg` must be on `PATH`; the taps use the SDK's `auto-encode` helper to turn
-downloaded audio into 20 ms Opus frames.
+downloaded audio into 20 ms Opus frames. The YouTube tap additionally needs
+`yt-dlp` on `PATH` — it is what fetches the audio.
