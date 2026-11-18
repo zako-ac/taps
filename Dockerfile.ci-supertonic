@@ -1,0 +1,19 @@
+# supertonic-tap, built on top of the image that is already running.
+#
+# The normal path (Dockerfile.ci) downloads the ONNX Runtime x64 tarball from
+# github.com/microsoft/onnxruntime. That repository answers 404 as of
+# 2026-11-18 — the project page, the release, the API, all of it — so the
+# download step fails and the image cannot be built from scratch at all.
+#
+# The runtime and the TTS model are both already inside the image in production.
+# Basing on it keeps them byte for byte and replaces only the binary this change
+# is about, which is also the smallest possible delta for a tap that is serving
+# the default voice.
+#
+# This is deliberately a chain, not a replacement: when onnxruntime is reachable
+# again, go back to Dockerfile.ci and delete this file.
+ARG BASE=ghcr.io/zako-ac/supertonic-tap:sha-67a60a3
+FROM ${BASE}
+
+# Built by the `build` job of this workflow and downloaded next to this file.
+COPY target/release/supertonic-tap /usr/local/bin/app
