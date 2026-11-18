@@ -2017,7 +2017,7 @@ dependencies = [
 [[package]]
 name = "protofish3"
 version = "0.1.0"
-source = "git+https://github.com/zako-ac/protofish3-rs#1c01053130378d332f710e6b7834aa5ae1bce383"
+source = "git+https://github.com/zako-ac/protofish3-rs#d580dcaa5d80fa3f67d6ad32be9ed521cffa3be2"
 dependencies = [
  "bytes",
  "futures-util",
@@ -2033,7 +2033,7 @@ dependencies = [
 [[package]]
 name = "protofish3-proto"
 version = "0.1.0"
-source = "git+https://github.com/zako-ac/protofish3-rs#1c01053130378d332f710e6b7834aa5ae1bce383"
+source = "git+https://github.com/zako-ac/protofish3-rs#d580dcaa5d80fa3f67d6ad32be9ed521cffa3be2"
 dependencies = [
  "cookie-factory",
  "nom",
@@ -4111,13 +4111,12 @@ dependencies = [
 [[package]]
 name = "zako3-tap-sdk"
 version = "0.1.3"
-source = "git+https://github.com/zako-ac/zako3#1a36c748b3fde7a5c29daa1e95f98dd8d4478126"
+source = "git+https://github.com/zako-ac/zako3?rev=0e863a3d1806426b777f76c6dd79b76599db9642#0e863a3d1806426b777f76c6dd79b76599db9642"
 dependencies = [
  "async-trait",
  "axum",
  "bytes",
  "ogg",
- "protofish2",
  "protofish3",
  "rustls",
  "rustls-native-certs",
@@ -4132,11 +4131,10 @@ dependencies = [
 [[package]]
 name = "zakofish"
 version = "0.1.1"
-source = "git+https://github.com/zako-ac/zako3#1a36c748b3fde7a5c29daa1e95f98dd8d4478126"
+source = "git+https://github.com/zako-ac/zako3?rev=0e863a3d1806426b777f76c6dd79b76599db9642#0e863a3d1806426b777f76c6dd79b76599db9642"
 dependencies = [
  "async-trait",
  "bytes",
- "protofish2",
  "protofish3",
  "rmp-serde",
  "rustls",
