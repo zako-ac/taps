@@ -23,6 +23,6 @@ yt-dlp = { version = "2.7.2", features = ["live-streaming"] }
 # Pinned to the commit that adds the SIGTERM drain (zako-ac/zako3#113). A tap
 # that dies on SIGTERM sends no close frame, and taphub then keeps routing
 # to it until the QUIC idle timeout.
-zako3-tap-sdk = { git = "https://github.com/zako-ac/zako3", rev = "0e863a3d1806426b777f76c6dd79b76599db9642", features = ["auto-encode", "healthcheck"] }
+zako3-tap-sdk = { git = "https://github.com/zako-ac/zako3", rev = "3fca7bdf8cd8056e387383ec02fa16d0c9b041af", features = ["auto-encode", "healthcheck"] }
 #zako3-tap-sdk = { path = "/home/allen/projects/zako3/libs/tap-sdk", features = ["auto-encode", "healthcheck"] }
 sam-tts = { git = "https://github.com/mincomk/sam-tts" }
