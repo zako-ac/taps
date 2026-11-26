@@ -13,7 +13,17 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     rustls::crypto::ring::default_provider()
         .install_default()
         .ok();
-    tracing_subscriber::fmt::init();
+    // Explicit filter, not `tracing_subscriber::fmt::init()`.
+    //
+    // `fmt::init()` installs an `EnvFilter` whenever the `env-filter` feature is
+    // in the dependency graph, and an `EnvFilter` built from an unset `RUST_LOG`
+    // passes nothing below ERROR. This binary pulls `zako3-telemetry` in through
+    // the tap SDK, which enables that feature — so the plain `init()` silently
+    // dropped every INFO line, including the one line per request this tap
+    // exists to emit, while the pod looked perfectly healthy.
+    let filter = tracing_subscriber::EnvFilter::try_from_default_env()
+        .unwrap_or_else(|_| tracing_subscriber::EnvFilter::new("info"));
+    tracing_subscriber::fmt().with_env_filter(filter).init();
 
     let tap_id = std::env::var("SUPERTONIC_TAP_ID").expect("SUPERTONIC_TAP_ID is required");
     let api_token =
