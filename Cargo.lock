@@ -3976,7 +3976,7 @@ dependencies = [
 [[package]]
 name = "zakofish4-common"
 version = "0.1.0"
-source = "git+https://github.com/zako-ac/zakofish4#15db82765d896e852167235e5a91d27dcd1b86c8"
+source = "git+https://github.com/zako-ac/zakofish4#c82cfdd583f0a709409cd603fc06d34add4664f1"
 dependencies = [
  "rmp-serde",
  "serde",
@@ -3988,7 +3988,7 @@ dependencies = [
 [[package]]
 name = "zakofish4-tap"
 version = "0.1.0"
-source = "git+https://github.com/zako-ac/zakofish4#15db82765d896e852167235e5a91d27dcd1b86c8"
+source = "git+https://github.com/zako-ac/zakofish4#c82cfdd583f0a709409cd603fc06d34add4664f1"
 dependencies = [
  "async-trait",
  "axum",
