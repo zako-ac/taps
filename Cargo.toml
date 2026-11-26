@@ -24,7 +24,13 @@ uuid = { version = "1.23.0", features = ["v4"] }
 ydrs = { git = "https://github.com/mincomk/ydrs", default-features = false, features = ["async"] }
 ysrs = { git = "https://github.com/mincomk/ysrs" }
 yt-dlp = { version = "2.7.2", features = ["live-streaming"] }
+# Pinned to the commit that counts the request path and decides /health on it
+# (zako-ac/zako3#122, on top of the SIGTERM drain in #113). A tap that dies on
+# SIGTERM sends no close frame, and taphub then keeps routing to it until the
+# QUIC idle timeout; the `metrics` feature is what puts the tap's own series on
+# /metrics, and `/health` answers 503 when a request is in flight and nothing
+# has been written back for TAP_HEALTH_STALL_SECS.
+zako3-tap-sdk = { git = "https://github.com/zako-ac/zako3", rev = "c4f922ef5cf801944c916ee2d4643be9908db1dd", features = ["auto-encode", "healthcheck", "metrics"] }
+#zako3-tap-sdk = { path = "/home/allen/projects/zako3/libs/tap-sdk", features = ["auto-encode", "healthcheck"] }
 zakofish4-tap = { git = "https://github.com/zako-ac/zakofish4", features = ["auto-encode", "healthcheck"] }
-zako3-tap-sdk = { git = "https://github.com/zako-ac/zako3", rev = "20de657485a0c933412933708f972af4e977d799", features = ["auto-encode", "healthcheck"] }
 sam-tts = { git = "https://github.com/mincomk/sam-tts" }
-

@@ -19,6 +19,12 @@ impl TapHandler for SupertonicTapHandler {
         &self,
         source: AudioSource,
     ) -> Result<AudioMetadataSuccessMessage, TapError> {
+        // The metadata request is the first half of every message, so this is
+        // where "did the tap receive it at all" is answered. The SDK logs the
+        // receipt too; this line is the one that proves the tap's own handler
+        // was reached, which it has to be if a metadata request is to succeed.
+        tracing::info!(source = source.as_str(), "handling audio metadata request");
+
         Ok(AudioMetadataSuccessMessage {
             metadatas: vec![AudioMetadata::Title(source.as_str().to_string())],
             cache: AudioCachePolicy {

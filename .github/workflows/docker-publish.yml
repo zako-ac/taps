@@ -41,8 +41,24 @@ jobs:
       contents: read
       packages: write
     strategy:
+      fail-fast: false
       matrix:
-        tap: [google-tap, papago-tap, youtube-tap, wedding-tap, supertonic-tap]
+        include:
+          - tap: google-tap
+            dockerfile: Dockerfile.ci
+          - tap: papago-tap
+            dockerfile: Dockerfile.ci
+          - tap: youtube-tap
+            dockerfile: Dockerfile.ci
+          - tap: wedding-tap
+            dockerfile: Dockerfile.ci
+          # supertonic comes from a different Dockerfile: its runtime image needs
+          # the ONNX Runtime tarball from github.com/microsoft/onnxruntime, and
+          # that repository answers 404 as of 2026-11-18 (the whole repo, not
+          # just the v1.22.0 asset), so `Dockerfile.ci` cannot build it at all.
+          # See Dockerfile.ci-supertonic.
+          - tap: supertonic-tap
+            dockerfile: Dockerfile.ci-supertonic
     steps:
       - uses: actions/checkout@v4
 
@@ -73,7 +89,7 @@ jobs:
       - uses: docker/build-push-action@v6
         with:
           context: .
-          file: Dockerfile.ci
+          file: ${{ matrix.dockerfile }}
           push: true
           build-args: BIN=${{ matrix.tap }}
           tags: ${{ steps.meta.outputs.tags }}
