@@ -4457,7 +4457,7 @@ dependencies = [
 [[package]]
 name = "zako3-tap-sdk"
 version = "0.2.0"
-source = "git+https://github.com/zako-ac/zako3?rev=c4f922ef5cf801944c916ee2d4643be9908db1dd#c4f922ef5cf801944c916ee2d4643be9908db1dd"
+source = "git+https://github.com/zako-ac/zako3?rev=e2cef8aae6af396db4cbcc2511831ad4c02e93fd#e2cef8aae6af396db4cbcc2511831ad4c02e93fd"
 dependencies = [
  "async-trait",
  "axum",
@@ -4479,7 +4479,7 @@ dependencies = [
 [[package]]
 name = "zako3-telemetry"
 version = "0.1.0"
-source = "git+https://github.com/zako-ac/zako3?rev=c4f922ef5cf801944c916ee2d4643be9908db1dd#c4f922ef5cf801944c916ee2d4643be9908db1dd"
+source = "git+https://github.com/zako-ac/zako3?rev=e2cef8aae6af396db4cbcc2511831ad4c02e93fd#e2cef8aae6af396db4cbcc2511831ad4c02e93fd"
 dependencies = [
  "anyhow",
  "axum",
@@ -4499,7 +4499,7 @@ dependencies = [
 [[package]]
 name = "zakofish"
 version = "0.1.1"
-source = "git+https://github.com/zako-ac/zako3?rev=c4f922ef5cf801944c916ee2d4643be9908db1dd#c4f922ef5cf801944c916ee2d4643be9908db1dd"
+source = "git+https://github.com/zako-ac/zako3?rev=e2cef8aae6af396db4cbcc2511831ad4c02e93fd#e2cef8aae6af396db4cbcc2511831ad4c02e93fd"
 dependencies = [
  "async-trait",
  "bytes",

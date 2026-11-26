@@ -16,7 +16,10 @@ serde_json = "1"
 tokio = { version = "1.51.0", features = ["full"] }
 tokio-stream = "0.1"
 tracing = "0.1.44"
-tracing-subscriber = "0.3.23"
+# `env-filter` is what lets a tap pick its level from RUST_LOG; declared here
+# rather than left to feature unification, because unification is how the log
+# level silently moved to ERROR once before (see supertonic-tap/src/main.rs).
+tracing-subscriber = { version = "0.3.23", features = ["env-filter"] }
 tts-urls = "1.0.0"
 url = "2"
 urlencoding = "2.1"
@@ -30,7 +33,7 @@ yt-dlp = { version = "2.7.2", features = ["live-streaming"] }
 # QUIC idle timeout; the `metrics` feature is what puts the tap's own series on
 # /metrics, and `/health` answers 503 when a request is in flight and nothing
 # has been written back for TAP_HEALTH_STALL_SECS.
-zako3-tap-sdk = { git = "https://github.com/zako-ac/zako3", rev = "c4f922ef5cf801944c916ee2d4643be9908db1dd", features = ["auto-encode", "healthcheck", "metrics"] }
+zako3-tap-sdk = { git = "https://github.com/zako-ac/zako3", rev = "e2cef8aae6af396db4cbcc2511831ad4c02e93fd", features = ["auto-encode", "healthcheck", "metrics"] }
 #zako3-tap-sdk = { path = "/home/allen/projects/zako3/libs/tap-sdk", features = ["auto-encode", "healthcheck"] }
 zakofish4-tap = { git = "https://github.com/zako-ac/zakofish4", features = ["auto-encode", "healthcheck"] }
 sam-tts = { git = "https://github.com/mincomk/sam-tts" }
