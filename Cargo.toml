@@ -20,9 +20,13 @@ url = "2"
 urlencoding = "2.1"
 uuid = { version = "1.23.0", features = ["v4"] }
 yt-dlp = { version = "2.7.2", features = ["live-streaming"] }
-# Pinned to the commit that adds the SIGTERM drain (zako-ac/zako3#113). A tap
-# that dies on SIGTERM sends no close frame, and taphub then keeps routing
-# to it until the QUIC idle timeout.
-zako3-tap-sdk = { git = "https://github.com/zako-ac/zako3", rev = "458c4eb18bc44865d60bbc3e5b129b9d1fdd8ee0", features = ["auto-encode", "healthcheck"] }
+# Pinned to the commit that has the SIGTERM drain (zako-ac/zako3#116) and the
+# request deadline (zako-ac/zako3#128). A tap that dies on SIGTERM sends no close
+# frame, and taphub then keeps routing to it until the QUIC idle timeout; a tap
+# whose handler stops making progress now ends its own process (exit 70) after
+# TAP_REQUEST_DEADLINE_SECS (60s) instead of holding a connection it will never
+# answer. The livenessProbe in c1-flux covers the case where it cannot run the
+# watchdog at all.
+zako3-tap-sdk = { git = "https://github.com/zako-ac/zako3", rev = "c317bc696a73f48ef8ef66a8be06cfd844d245de", features = ["auto-encode", "healthcheck"] }
 #zako3-tap-sdk = { path = "/home/allen/projects/zako3/libs/tap-sdk", features = ["auto-encode", "healthcheck"] }
 sam-tts = { git = "https://github.com/mincomk/sam-tts" }
