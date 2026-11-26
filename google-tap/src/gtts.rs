@@ -1,9 +1,9 @@
 use std::io::Cursor;
-use zako3_tap_sdk::{
+use zakofish4_tap::{
     AttachedMetadata, AudioMetadataSuccessMessage, AudioRequestSuccessMessage, AudioSource,
     AudioStreamSender, TapError, TapHandler, encode::decode_and_stream,
 };
-use zako3_tap_sdk::{AudioCachePolicy, AudioCacheType, AudioMetadata};
+use zakofish4_tap::{AudioCachePolicy, AudioCacheType, AudioMetadata};
 
 pub struct GttsTapHandler;
 

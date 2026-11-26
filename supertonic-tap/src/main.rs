@@ -1,6 +1,6 @@
 use std::path::PathBuf;
 use std::sync::Arc;
-use zako3_tap_sdk::{Transport, tap};
+use zakofish4_tap::tap;
 
 pub mod supertonic;
 pub mod tts;
@@ -18,8 +18,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     let tap_id = std::env::var("SUPERTONIC_TAP_ID").expect("SUPERTONIC_TAP_ID is required");
     let api_token =
         std::env::var("SUPERTONIC_API_TOKEN").expect("SUPERTONIC_API_TOKEN is required");
-    let hub = std::env::var("TAPHUB_ENDPOINT").unwrap_or_else(|_| "api.zako.ac".to_string());
-    let server_name = std::env::var("TAPHUB_SERVER_NAME").ok();
+    // One WebSocket to HQ, carrying control only — the audio goes straight to
+    // whichever sink HQ nominates, over UDP. The default is the in-cluster
+    // address; set this to wss://zako.ac/gateway to run a tap from outside.
+    let gateway = std::env::var("ZAKO_GATEWAY_URL")
+        .unwrap_or_else(|_| "ws://zako3-hq:8080/gateway".to_string());
     let healthcheck_port = std::env::var("TAP_HEALTHCHECK_PORT").ok().map(|v| {
         v.parse::<u16>()
             .expect("TAP_HEALTHCHECK_PORT must be a valid port number")
@@ -71,16 +74,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     )?);
 
     let mut builder = tap()
-        .hub(&hub)
+        .hub(&gateway)
         .tap_id(&tap_id)
         .friendly_name("Supertonic TTS Tap")
         .api_token(&api_token)
-        .transport(Transport::Protofish3)
         .selection_weight(1.0);
 
-    if let Some(ref sn) = server_name {
-        builder = builder.server_name(sn);
-    }
     if let Some(port) = healthcheck_port {
         builder = builder.healthcheck_port(port);
     }

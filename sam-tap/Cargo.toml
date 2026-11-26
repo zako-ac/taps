@@ -11,4 +11,4 @@ sam-tts = { workspace = true }
 tokio = { workspace = true }
 tracing = { workspace = true }
 tracing-subscriber = { workspace = true }
-zako3-tap-sdk = { workspace = true }
+zakofish4-tap = { workspace = true }
