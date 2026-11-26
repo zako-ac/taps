@@ -1,6 +1,6 @@
 use std::path::PathBuf;
 use std::sync::Arc;
-use zako3_tap_sdk::{Transport, tap};
+use zakofish4_tap::tap;
 
 pub mod supertonic;
 pub mod tts;
@@ -17,10 +17,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     //
     // `fmt::init()` installs an `EnvFilter` whenever the `env-filter` feature is
     // in the dependency graph, and an `EnvFilter` built from an unset `RUST_LOG`
-    // passes nothing below ERROR. This binary pulls `zako3-telemetry` in through
-    // the tap SDK, which enables that feature — so the plain `init()` silently
-    // dropped every INFO line, including the one line per request this tap
-    // exists to emit, while the pod looked perfectly healthy.
+    // passes nothing below ERROR. The pf3 SDK pulled feature unification into
+    // that shape and the plain `init()` silently dropped every INFO line,
+    // including the one line per request this tap exists to emit, while the pod
+    // looked perfectly healthy. The filter stays explicit so the migration does
+    // not have to rely on the new dependency tree being shaped differently.
     let filter = tracing_subscriber::EnvFilter::try_from_default_env()
         .unwrap_or_else(|_| tracing_subscriber::EnvFilter::new("info"));
     tracing_subscriber::fmt().with_env_filter(filter).init();
@@ -28,8 +29,15 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     let tap_id = std::env::var("SUPERTONIC_TAP_ID").expect("SUPERTONIC_TAP_ID is required");
     let api_token =
         std::env::var("SUPERTONIC_API_TOKEN").expect("SUPERTONIC_API_TOKEN is required");
-    let hub = std::env::var("TAPHUB_ENDPOINT").unwrap_or_else(|_| "api.zako.ac".to_string());
-    let server_name = std::env::var("TAPHUB_SERVER_NAME").ok();
+    // One WebSocket to HQ carrying control only; the audio goes straight to the
+    // sink HQ nominates, over protofish4/UDP. The default is the in-cluster
+    // gateway address, which is what every tap in this cluster uses.
+    //
+    // This replaces TAPHUB_ENDPOINT/TAPHUB_SERVER_NAME, which named the
+    // taphub QUIC listener — a different service on a different protocol, not a
+    // different spelling of this one.
+    let gateway = std::env::var("ZAKO_GATEWAY_URL")
+        .unwrap_or_else(|_| "ws://zako3-hq:8080/gateway".to_string());
     let healthcheck_port = std::env::var("TAP_HEALTHCHECK_PORT").ok().map(|v| {
         v.parse::<u16>()
             .expect("TAP_HEALTHCHECK_PORT must be a valid port number")
@@ -81,16 +89,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     )?);
 
     let mut builder = tap()
-        .hub(&hub)
+        .hub(&gateway)
         .tap_id(&tap_id)
         .friendly_name("Supertonic TTS Tap")
         .api_token(&api_token)
-        .transport(Transport::Protofish3)
         .selection_weight(1.0);
 
-    if let Some(ref sn) = server_name {
-        builder = builder.server_name(sn);
-    }
     if let Some(port) = healthcheck_port {
         builder = builder.healthcheck_port(port);
     }

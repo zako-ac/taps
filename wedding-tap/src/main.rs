@@ -74,8 +74,7 @@ impl TapHandler for WeddingTapHandler {
             include_bytes!("wdcursed.mp3").to_vec()
         } else if re {
             include_bytes!("wdr.ogg").to_vec()
-        }
-        else{
+        } else {
             include_bytes!("wd.mp3").to_vec()
         };
 
