@@ -1,12 +1,27 @@
 use std::io::Cursor;
 use std::sync::Arc;
-use zako3_tap_sdk::{
+use std::time::{Duration, Instant};
+use zakofish4_tap::{
     AttachedMetadata, AudioCachePolicy, AudioCacheType, AudioMetadata, AudioMetadataSuccessMessage,
-    AudioRequestSuccessMessage, AudioSource, AudioStreamSender, TapError, TapHandler,
+    AudioRequestSuccessMessage, AudioSource, AudioStreamSender, ProbeResult, TapError, TapHandler,
     encode::decode_and_stream,
 };
 
 use crate::tts::TtsPool;
+
+/// The phrase a probe synthesizes.
+///
+/// Short on purpose: the probe runs every 30 seconds per connection (the hub's
+/// `ProbeConfig::default`), on the same pool real requests use, so it must cost
+/// roughly nothing. "ok" is still a full pass of the pipeline — script, model,
+/// WAV encode — which is what makes the answer worth anything; a probe that
+/// skipped the work would answer "healthy" for a wedged engine too.
+const PROBE_TEXT: &str = "ok";
+
+/// A probe that has not answered in this long is a failed probe, not a slow
+/// one. The hub gives up at 20s (`probe_timeout`), so answering after that is
+/// answering into a closed question.
+const PROBE_DEADLINE: Duration = Duration::from_secs(15);
 
 pub struct SupertonicTapHandler {
     pub pool: Arc<TtsPool>,
@@ -62,5 +77,45 @@ impl TapHandler for SupertonicTapHandler {
             duration_secs: None,
             metadatas: AttachedMetadata::UseCached,
         })
+    }
+
+    /// Prove the synthesis pipeline still works, without a sink and without the
+    /// network.
+    ///
+    /// This is the answer the pf3 path never had: the tap held its control
+    /// connection, answered heartbeats and answered `AudioRequestSuccess`, and
+    /// a wedged synthesis engine was invisible to everything except a silent
+    /// listener. The probe runs the same pool real requests run and throws the
+    /// audio away.
+    async fn probe(&self) -> ProbeResult {
+        let started = Instant::now();
+        match tokio::time::timeout(
+            PROBE_DEADLINE,
+            self.pool
+                .synthesize(PROBE_TEXT.to_string(), self.lang.clone()),
+        )
+        .await
+        {
+            Ok(Ok(bytes)) if bytes.is_empty() => ProbeResult::Failed {
+                reason: "probe synthesized 0 bytes".to_string(),
+            },
+            Ok(Ok(bytes)) => {
+                let time_to_first_sample_ms = started.elapsed().as_millis() as u64;
+                tracing::debug!(
+                    bytes = bytes.len(),
+                    time_to_first_sample_ms,
+                    "probe synthesized"
+                );
+                ProbeResult::Ready {
+                    time_to_first_sample_ms,
+                }
+            }
+            Ok(Err(e)) => ProbeResult::Failed {
+                reason: e.to_string(),
+            },
+            Err(_) => ProbeResult::Failed {
+                reason: format!("probe synthesis exceeded {PROBE_DEADLINE:?}"),
+            },
+        }
     }
 }

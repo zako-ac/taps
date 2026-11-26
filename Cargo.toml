@@ -27,13 +27,12 @@ uuid = { version = "1.23.0", features = ["v4"] }
 ydrs = { git = "https://github.com/mincomk/ydrs", default-features = false, features = ["async"] }
 ysrs = { git = "https://github.com/mincomk/ysrs" }
 yt-dlp = { version = "2.7.2", features = ["live-streaming"] }
-# Pinned to the commit that counts the request path and decides /health on it
-# (zako-ac/zako3#122, on top of the SIGTERM drain in #113). A tap that dies on
-# SIGTERM sends no close frame, and taphub then keeps routing to it until the
-# QUIC idle timeout; the `metrics` feature is what puts the tap's own series on
-# /metrics, and `/health` answers 503 when a request is in flight and nothing
-# has been written back for TAP_HEALTH_STALL_SECS.
-zako3-tap-sdk = { git = "https://github.com/zako-ac/zako3", rev = "e2cef8aae6af396db4cbcc2511831ad4c02e93fd", features = ["auto-encode", "healthcheck", "metrics"] }
-#zako3-tap-sdk = { path = "/home/allen/projects/zako3/libs/tap-sdk", features = ["auto-encode", "healthcheck"] }
+# The tap SDK every tap in this workspace now runs on. `healthcheck` is what
+# serves /health and /metrics on the port the PodMonitor scrapes; `auto-encode`
+# is what turns a synthesized or downloaded file into Opus frames.
+#
+# No revision pin: this tracks the SDK's main, which is where the SIGTERM drain
+# and the request-path counters landed (zakofish4#3). Pin it by `rev` here if a
+# tap ever has to be rebuilt reproducibly from an older SDK.
 zakofish4-tap = { git = "https://github.com/zako-ac/zakofish4", features = ["auto-encode", "healthcheck"] }
 sam-tts = { git = "https://github.com/mincomk/sam-tts" }
