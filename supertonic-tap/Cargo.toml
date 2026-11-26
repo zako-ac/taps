@@ -26,4 +26,4 @@ tokio = { workspace = true }
 tracing = { workspace = true }
 tracing-subscriber = { workspace = true }
 unicode-normalization = "0.1.25"
-zakofish4-tap = { workspace = true }
+zako3-tap-sdk = { workspace = true }
